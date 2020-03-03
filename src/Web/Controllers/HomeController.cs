@@ -3,6 +3,7 @@ using ApplicationCore.Exceptions;
 using ApplicationCore.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,13 @@ namespace Web.Controllers
     public class HomeController : Controller
     {
         private readonly ITaskRepository repository;
+        private readonly ILogger<HomeController> logger;
         private readonly IMapper mapper;
-        public HomeController(ITaskRepository repository, IMapper mapper)
+        public HomeController(ITaskRepository repository, IMapper mapper, ILogger<HomeController> logger)
         {
             this.repository = repository;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
         public IActionResult Index() => View();
@@ -41,6 +44,7 @@ namespace Web.Controllers
             {
                 var taskObj = mapper.Map<TaskObject>(model);
                 taskObj = await repository.Add(taskObj);
+                logger.LogInformation($"Task \"{taskObj.Title}\" with ID {taskObj.Id} added.");
                 return RedirectToAction(nameof(Details), new { id = taskObj.Id, updateTree = true });
             }
             return PartialView(model);
@@ -65,6 +69,7 @@ namespace Web.Controllers
                 try
                 {
                     await repository.Update(taskObj);
+                    logger.LogInformation($"Task with ID \"{taskObj.Id}\" updated.");
                 }
                 catch (TaskRepositoryException ex)
                 {
@@ -89,6 +94,7 @@ namespace Web.Controllers
         public async Task<IActionResult> DeletePost(DeleteTaskViewModel model)
         {
             await repository.Delete(model.Id);
+            logger.LogInformation($"Task with ID \"{model.Id}\" deleted.");
             return RedirectToAction(nameof(BlankPage));
         }
 
