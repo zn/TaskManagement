@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using Infrastructure;
+using ApplicationCore.Interfaces;
+using Infrastructure.Data;
 
 namespace Web
 {
@@ -26,7 +28,10 @@ namespace Web
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+            services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddDbContext(Configuration.GetConnectionString("DefaultConnection"));
+            services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,10 +48,11 @@ namespace Web
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{action=Index}/{id?}",
+                    defaults: new { controller = "Home" }
+                );
             });
         }
     }
