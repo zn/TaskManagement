@@ -47,7 +47,10 @@ namespace Infrastructure.Data
                 if (await canCompleteSubtasks(newEntity))
                     completeSubtasks(newEntity);
                 else
+                {
+                    context.Entry(newEntity).State = EntityState.Detached;
                     throw new TaskRepositoryException(nameof(newEntity.Status), "Cannot complete one or more subtasks!");
+                }
             }
 
             await base.Update(newEntity);
