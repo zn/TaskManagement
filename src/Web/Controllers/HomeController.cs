@@ -1,4 +1,6 @@
-﻿using ApplicationCore.Interfaces;
+﻿using ApplicationCore.Entities;
+using ApplicationCore.Exceptions;
+using ApplicationCore.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -20,6 +22,56 @@ namespace Web.Controllers
         }
 
         public IActionResult Index() => View();
+
+        [HttpGet]
+        public IActionResult Create(int? id)
+        {
+            var viewModel = new CreateTaskViewModel() { ParentId = id };
+            return PartialView(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreateTaskViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var taskObj = mapper.Map<TaskObject>(model);
+                taskObj = await repository.Add(taskObj);
+                return RedirectToAction(nameof(Details), new { id = taskObj.Id, updateTree = true });
+            }
+            return PartialView(model);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Update(int id)
+        {
+            var taskObj = await repository.GetById(id);
+            var viewModel = mapper.Map<UpdateTaskViewModel>(taskObj);
+            return PartialView(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(UpdateTaskViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var taskObj = mapper.Map<TaskObject>(model);
+                try
+                {
+                    await repository.Update(taskObj);
+                }
+                catch (TaskRepositoryException ex)
+                {
+                    ModelState.AddModelError(ex.Key, ex.Message);
+                    return PartialView(model);
+                }
+                return RedirectToAction(nameof(Details), new { id = taskObj.Id, updateTree = true });
+            }
+            return PartialView(model);
+        }
 
         public async Task<JsonResult> GetTree() // for ajax requests
         {

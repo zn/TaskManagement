@@ -1,0 +1,49 @@
+﻿@model CreateTaskViewModel
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<form asp-action="Create" method="post" data-ajax="true" data-ajax-method="post" data-ajax-update="#mainBlock" data-ajax-mode="replace"
+      asp-antiforgery="true">
+
+    <div class="form-group">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control">
+        <span asp-validation-for="Title" class="form-text text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="form-text text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Executors"></label>
+        <input asp-for="Executors" class="form-control">
+        <span asp-validation-for="Executors" class="form-text text-danger"></span>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label asp-for="CompletionDate"></label>
+            <input asp-for="CompletionDate" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+            <span asp-validation-for="CompletionDate" class="form-text text-danger"></span>
+        </div>
+        <div class="form-group col-md-6 pr-0">
+            <label asp-for="CompletionTime"></label>
+            <input asp-for="CompletionTime" class="form-control" value="@DateTime.Now.AddHours(1).ToString("HH:mm")">
+            <span asp-validation-for="CompletionTime" class="form-text text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <button onclick="cancel_click()" type="button" class="btn btn-default">Отмена</button>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </div>
+
+    <input asp-for="ParentId" type="hidden" value="@Model.ParentId" />
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
