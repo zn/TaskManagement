@@ -2,7 +2,7 @@
 {
     public enum Status
     {
-        Assigment,
+        Assigned,
         Running,
         Paused,
         Completed

@@ -25,7 +25,7 @@ namespace Infrastructure.Data.Config
                 .IsRequired();
 
             builder.Property(t => t.Status)
-                .HasDefaultValue(Status.Assigment);
+                .HasDefaultValue(Status.Assigned);
 
             builder.Property(t => t.RegisterDate)
                 .IsRequired();
