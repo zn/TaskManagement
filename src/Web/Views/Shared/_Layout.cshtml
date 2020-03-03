@@ -15,8 +15,23 @@
 </head>
 <body>
 
-    <div class="body-content">
-        @RenderBody()
+    <div class="container body-content">
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <button onclick="create_click('')" class="btn btn-success">Добавить задачу</button>
+                <hr />
+                <div id="jstree_div"></div>
+            </div>
+
+            <div class="col-md-8" id="mainBlock">
+                @RenderBody()
+            </div>
+        </div>
+
+        <hr />
+        <footer>
+            <p>&copy; 2020 - dmdtest</p>
+        </footer>
     </div>
 
     <script src="~/lib/jquery/jquery.min.js"></script>

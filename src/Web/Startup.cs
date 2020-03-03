@@ -12,6 +12,8 @@ using Microsoft.Extensions.Hosting;
 using Infrastructure;
 using ApplicationCore.Interfaces;
 using Infrastructure.Data;
+using System.Reflection;
+using AutoMapper;
 
 namespace Web
 {
@@ -28,6 +30,8 @@ namespace Web
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
             //services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddDbContext(Configuration.GetConnectionString("DefaultConnection"));

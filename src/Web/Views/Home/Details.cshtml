@@ -1,0 +1,60 @@
+﻿@model TaskDetailsViewModel
+
+@functions{
+    public static string PrintLeadTime(TimeSpan leadTime)
+    {
+        int totalDays = Convert.ToInt32(leadTime.TotalDays);
+        int totalHours = Convert.ToInt32(leadTime.TotalHours);
+        if (totalDays == 0)
+        {
+            if (totalHours == 0)
+                return $"{leadTime.Minutes} мин.";
+            return $"{totalHours} ч., {leadTime.Minutes} мин.";
+        }
+        return $"{totalDays} д., {leadTime.Hours} ч., {leadTime.Minutes} мин.";
+    }
+}
+
+<h2>@Model.Title</h2>
+
+@if (Model.IsExpired)
+{
+    <p class="text-danger">The task is expired!</p>
+}
+
+<p>Описание: @Model.Description</p>
+<p>Исполнители: @Model.Executors</p>
+<p>Дата регистрации: @Model.RegisterDate.ToString("dd.MM.yyyy HH:mm")</p>
+<p>Дата выполнения: @Model.CompletionDate.ToString("dd.MM.yyyy HH:mm")</p>
+<p>Статус: @Model.Status</p>
+<p>Плановая трудоёмкость задачи: @Model.LabourIntensity</p>
+<p>Фактическое время выполнения: @PrintLeadTime(Model.LeadTime)</p>
+
+@if (Model.Children.Any())
+{
+    <p>
+        Подзадачи:
+        <ul>
+            @foreach (var task in Model.Children)
+            {
+                <li>@task.Title - @PrintLeadTime(task.LeadTime)</li>
+            }
+        </ul>
+    </p>
+}
+
+<p>
+    <button onclick="create_click(@Model.Id)" class="btn btn-success">Добавить подзадачу</button>
+    <button onclick="update_click(@Model.Id)" class="btn btn-warning">Редактировать</button>
+    @if (!Model.Children.Any())
+    {
+        <button onclick="delete_click(@Model.Id)" class="btn btn-danger">Удалить</button>
+    }
+</p>
+
+@if (Model.UpdateTree)
+{
+    <script>
+        refresh_tree(@Model.Id);
+    </script>
+}
