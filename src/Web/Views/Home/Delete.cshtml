@@ -1,0 +1,13 @@
+﻿@model DeleteTaskViewModel
+
+<div class="text-center mt-5">
+    Вы действительно хотите удалить задачу «@Model.Title»?
+    <form asp-action="Delete" method="post" data-ajax="true" data-ajax-method="post" data-ajax-update="#mainBlock" data-ajax-mode="replace">
+        <input type="hidden" value="@Model.Id" />
+
+        <div class="form-group pt-3">
+            <button onclick="cancel_click()" type="button" class="btn btn-primary">Отмена</button>
+            <button type="submit" class="btn btn-danger">Удалить</button>
+        </div>
+    </form>
+</div>

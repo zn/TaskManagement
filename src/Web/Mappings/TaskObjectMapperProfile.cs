@@ -13,6 +13,9 @@ namespace Web.Mappings
             CreateMap<TaskObject, TaskDetailsViewModel>()
                 .ReverseMap();
 
+            CreateMap<TaskObject, DeleteTaskViewModel>()
+                .ReverseMap();
+
             CreateMap<TaskObject, TreeNodeViewModel>()
                 .ForMember(taskObj => taskObj.Parent, options => options.Ignore())
                 .ConstructUsing(taskObj => new TreeNodeViewModel

@@ -23,6 +23,9 @@ namespace Web.Controllers
 
         public IActionResult Index() => View();
 
+        public IActionResult BlankPage() => PartialView("_BlankPage");
+
+
         [HttpGet]
         public IActionResult Create(int? id)
         {
@@ -71,6 +74,22 @@ namespace Web.Controllers
                 return RedirectToAction(nameof(Details), new { id = taskObj.Id, updateTree = true });
             }
             return PartialView(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var taskObj = await repository.GetById(id);
+            var viewModel = mapper.Map<DeleteTaskViewModel>(taskObj);
+            return PartialView(viewModel);
+        }
+
+        [HttpPost]
+        [ActionName("Delete")]
+        public async Task<IActionResult> DeletePost(DeleteTaskViewModel model)
+        {
+            await repository.Delete(model.Id);
+            return RedirectToAction(nameof(BlankPage));
         }
 
         public async Task<JsonResult> GetTree() // for ajax requests

@@ -20,10 +20,12 @@ namespace Web.ViewModels
 
         [Required]
         [DataType(DataType.Date)]
+        [Display(Name = "Completion date")]
         public DateTime CompletionDate { get; set; }
 
         [Required]
         [DataType(DataType.Time)]
+        [Display(Name = "Completion time")]
         public DateTime CompletionTime { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
